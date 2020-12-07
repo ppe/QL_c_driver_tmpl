@@ -47,4 +47,10 @@ or with Toolkit II
 lrespr flp1_echodrv_bin
 ```
 
+### Resources
+[QL Technical Guide](http://www.dilwyn.me.uk/docs/manuals/qltm.pdf) by Tony Tebby and David Karlin available from [Dilwyn Jones's wonderful site](http://www.dilwyn.me.uk/)
+Book: **The Sinclair QDOS Companion** by Andrew Pennell, with luck, you can find a copy on Ebay. _ISBN_ 0-946408-69-6
+[Norman Dunbar's excellent QDOS/SMS internals wiki](http://qdosmsq.dunbar-it.co.uk/doku.php?id=qdosmsq:start&rev=1313651331#qdosmsq)
+[GCC Extended ASM syntax](https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html)
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
