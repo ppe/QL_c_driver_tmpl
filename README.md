@@ -35,7 +35,16 @@ To get started, pull the container image:
 * Currently, the container image does not have `/usr/local/qdos/bin` in default PATH so might need to add it manually.
   * Check that the `ld` command comes from the correct location by running `which ld` which should result in `/usr/local/qdos/bin/ld`
   * If `ld` comes from the wrong path it is the GNU ld which we **do not** want. You can add the correct path temporarily by: `export PATH=/usr/local/qdos/bin:$PATH`
-  * `make` builds the binary file `echodrv_bin`
-  * `make clean` cleans the output files
+* `make` builds the binary file `echodrv_bin`
+* `make clean` cleans the output files
+
+### Using on a QL (emulator or real)
+```
+a=alchp(3000):lbytes flp1_echodrv_bin:call a
+```
+or with Toolkit II
+```
+lrespr flp1_echodrv_bin
+```
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
