@@ -6,6 +6,7 @@ DRIVER_BIN = echodrv_bin
 SRCS = heap.c chan_ops.c echodrv.c
 $(DRIVER_BIN): $(OBJS)
 	ld -o$(DRIVER_BIN) -ms -screspr.o $(OBJS) -lgcc
+.PHONY: clean
 clean:
 	$(RM) -f *.o *.s *.MAP $(DRIVER_BIN)
 
