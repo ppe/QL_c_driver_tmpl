@@ -6,6 +6,7 @@ The other reason for creating this template was that I wanted to switch to using
 
 ### Functionality
 The driver is an echo generator. You can send a string into it and then read the same string back either a character or a line at a time. An example session in SuperBasic (QL's version of BASIC):
+```
     open #3,echo_
     print #3,"Foo42"
     input #3,a$
@@ -13,6 +14,7 @@ The driver is an echo generator. You can send a string into it and then read the
     print #3,"Test"
     print inkey$(#3,0): rem prints "T"
     close #3
+```
 
 ### Dependencies
 * Docker
@@ -20,12 +22,16 @@ The driver is an echo generator. You can send a string into it and then read the
 
 There are instructions for the container on the QL Forum in [this thread.](https://qlforum.co.uk/viewtopic.php?t=2105)
 To get started, pull the container image:
+```bash
     docker pull xora/qdos-gcc
+```
 
 ### Compiling
 * Pull the code and change into the code directory
 * Open a shell into the container:
+```bash
     docker run -it -v $PWD:/build xora/qdos-gcc /bin/bash
+```bash
 * Currently, the container image does not have `/usr/local/qdos/bin` in default PATH so might need to add it manually.
   * Check that the `ld` command comes from the correct location by running `which ld` which should result in `/usr/local/qdos/bin/ld`
   * If `ld` comes from the wrong path it is the GNU ld which we **do not** want. You can add the correct path temporarily by: `export PATH=/usr/local/qdos/bin:$PATH`
