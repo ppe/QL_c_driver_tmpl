@@ -1,18 +1,11 @@
 #include <qdos.h>
 #include <string.h>
+#include "types.h"
+#include "chan_ops.h"
 #include "heap.h"
 
 // Total size of channel block
 #define CHAN_BLOCK_SIZE 0x100
-// Offsets to channel block to store info that should be persisted across IO calls
-#define READ_PTR 0x18
-#define END_PTR 0x1C
-#define BUF_START 0x20
-// Maximum length of characters that this driver can accept in a SSTRG
-#define MAX_LEN 0xE0
-
-// Print a msg that is a QLSTR_t to channel 0
-#define PRINT0( msg ) (void)io_sstrg( (chanid_t)0, (timeout_t)0, msg.qs_str, msg.qs_strlen )
 
 // QDOS IO Sub System operation codes 
 #define IO_FBYTE 1
@@ -21,10 +14,8 @@
 #define IO_SSTRG 7
 #define SD_CHENQ 0x0b
 
-// linefeed character
-#define CHR_LF 0x0a
-
-typedef unsigned short uint16;
+// Print a msg that is a QLSTR_t to channel 0
+#define PRINT0( msg ) (void)io_sstrg( (chanid_t)0, (timeout_t)0, msg.qs_str, msg.qs_strlen )
 
 // Prefix for channel open string for this driver
 static const char DRIVER_NAME[] = "echo_";
@@ -63,64 +54,6 @@ static long ch_close() {
     char *chan_blk_store = chan_blk;
     sv_memfree( chan_blk_store );
     return ERR_OK;
-}
-
-static char fbyte( char *chanblk, int *error_code ) {
-    char c;
-    char *read_ptr = *(char **)(chanblk + READ_PTR);
-    char *end_ptr = *(char **)(chanblk + END_PTR);
-
-    if( read_ptr == end_ptr ) {
-        // End of buffer reached, no more characters to read
-        *error_code = ERR_EF;
-        return 0;
-    }
-    c = *read_ptr++;
-    *(char **)(chanblk + READ_PTR) = read_ptr;
-    *error_code = ERR_OK;
-    return c;
-}
-
-static int sstrg( char *chanblk, unsigned long timeout, int count, char **addr1 ) {
-    char *dest = chanblk + BUF_START;
-    char *src = *addr1;
-    int i;
-    for( i = 0; i < count && i < MAX_LEN; i++ ) {
-        *dest++ = *src++;
-    }
-    // will be returned from IOSS to caller, points to one past last character written
-    *addr1 = src;
-    // Update channel variables
-    // Reset read pointer to start of buffer
-    *(char **)(chanblk + READ_PTR) = chanblk + BUF_START;
-    // Set end pointer to one past last character written
-    *(char **)(chanblk + END_PTR) = dest;
-    return count;
-}
-
-static uint16 fline( char *chanblk, unsigned long timeout, uint16 buf_len, char **h_buf, int *error_code ) {
-    char *read_ptr = *(char **)(chanblk + READ_PTR);
-    char *end_ptr = *(char **)(chanblk + END_PTR);
-    char *buf = *h_buf;
-    char c = 0;
-    uint16 num_read = 0;
-
-    if( read_ptr == end_ptr ) {
-        // End of buffer reached, no more characters to read
-        *error_code = ERR_EF;
-        return 0;
-    }
-    while( read_ptr <= end_ptr && num_read < buf_len ) {
-        num_read++;
-        c = *read_ptr++;
-        *buf++ = c;
-        if( CHR_LF == c ) { break; }
-    }
-
-    *(char **)(chanblk + READ_PTR) = read_ptr - 1; // Adjust for final increment in while loop
-    *h_buf = buf;
-    *error_code = ERR_OK;
-    return num_read;
 }
 
 long ch_io() {
