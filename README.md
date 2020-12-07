@@ -31,7 +31,7 @@ To get started, pull the container image:
 * Open a shell into the container:
 ```bash
     docker run -it -v $PWD:/build xora/qdos-gcc /bin/bash
-```bash
+```
 * Currently, the container image does not have `/usr/local/qdos/bin` in default PATH so might need to add it manually.
   * Check that the `ld` command comes from the correct location by running `which ld` which should result in `/usr/local/qdos/bin/ld`
   * If `ld` comes from the wrong path it is the GNU ld which we **do not** want. You can add the correct path temporarily by: `export PATH=/usr/local/qdos/bin:$PATH`
