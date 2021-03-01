@@ -57,7 +57,7 @@ uint16 fline( char *chanblk, unsigned long timeout, uint16 buf_len, char **h_buf
         if( CHR_LF == c ) { break; }
     }
 
-    *(char **)(chanblk + READ_PTR) = read_ptr - 1; // Adjust for final increment in while loop
+    *(char **)(chanblk + READ_PTR) = read_ptr;
     *h_buf = buf;
     *error_code = ERR_OK;
     return num_read;
