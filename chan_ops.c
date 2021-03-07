@@ -56,9 +56,14 @@ uint16 fline( char *chanblk, unsigned long timeout, uint16 buf_len, char **h_buf
         *buf++ = c;
         if( CHR_LF == c ) { break; }
     }
+    if( num_read == buf_len && CHR_LF != c ) {
+        // Read max # of chars to buf but did not reach end of line
+        *error_code = ERR_BO;
+    } else {
+        *error_code = ERR_OK;
+    }
 
     *(char **)(chanblk + READ_PTR) = read_ptr;
     *h_buf = buf;
-    *error_code = ERR_OK;
     return num_read;
 }
